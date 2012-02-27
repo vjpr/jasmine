@@ -1,5 +1,5 @@
 task :version do
-  require 'pp'
-  pp version_hash
-  pp version_string
+  require 'awesome_print'
+  ap version_hash
+  ap version_string
 end
