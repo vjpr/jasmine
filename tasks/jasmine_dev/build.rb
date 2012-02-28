@@ -1,9 +1,7 @@
 class JasmineDev < Thor
 
-  desc "build", "Build Jasmine js & css files"
-  method_option :directory, :default => "./lib/jasmine-core"
-
-  def build(directory)
+  desc "build_distribution", "Build Jasmine js & css files"
+  def build_distribution(directory = "./lib/jasmine-core")
     invoke JasmineDev, ["js_hint"]
 
     say "Building Jasmine distribution from source into #{directory}", :cyan
@@ -14,7 +12,7 @@ class JasmineDev < Thor
       create_file "jasmine-html.js", concat_contents_of(jasmine_html_js_paths)
     end
 
-    say 'Buliding CSS...', :yellow
+    say 'Building CSS...', :yellow
     run "compass compile", :capture => true
 
     copy_file File.join("#{JasmineDev.project_root}", 'src', 'html', 'jasmine.css'),

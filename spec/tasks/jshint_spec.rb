@@ -7,11 +7,12 @@ describe "JSHint task" do
 
   before do
     reset_dir tmp_dir
-    jasmine_dev.should_receive(:`).with('which node').and_return('')
+
   end
 
   describe "when Node is not present" do
     before do
+      jasmine_dev.should_receive(:has_node?).and_return(false)
       @output = capture_output { jasmine_dev.js_hint }
     end
 
@@ -27,7 +28,7 @@ describe "JSHint task" do
 
   describe "when Node is present" do
     before do
-      jasmine_dev.should_receive(:`).with('node jshint/run.js').and_return('Jasmine JSHint PASSED.')
+      jasmine_dev.should_receive(:has_node?).and_return(true)
 
       @output = capture_output { jasmine_dev.js_hint }
     end

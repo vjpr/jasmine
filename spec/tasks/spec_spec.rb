@@ -7,7 +7,8 @@ describe "Spec tasks" do
   describe "spec_node" do
     describe "when Node.js is not present" do
       before do
-        @output = capture_output { jasmine_dev.spec_node }
+        jasmine_dev.should_receive(:has_node?).and_return(false)
+        @output = capture_output { jasmine_dev.execute_specs_in_node }
       end
 
       it "should prompt the user to install Node" do
@@ -18,20 +19,29 @@ describe "Spec tasks" do
 
     describe "when Node.js is present" do
       before do
-        @output = capture_output { jasmine_dev.spec_node }
+        jasmine_dev.should_receive(:has_node?).and_return(true)
+        @output = capture_output { jasmine_dev.execute_specs_in_node }
       end
 
-      it "should build the distribution"
+      it "should build the distribution" do
+        @output.should match(/Building Jasmine distribution/)
+      end
 
-      it "should count the number of specs to be run"
+      it "should tell the developer that the specs are being counted" do
+        @output.should match(/Counting specs/)
+      end
 
-      it "should tell the user tha the specs are running in Node.js"
+      it "should tell the user that the specs are running in Node.js" do
+        @output.should match(/Running all appropriate specs via Node/)
+        @output.should match(/Started/)
+        @output.should match(/\d+ specs, 0 failures/)
+      end
     end
   end
 
   describe "spec_browser" do
     before do
-      @output = capture_output { jasmine_dev.spec_node }
+      @output = capture_output { jasmine_dev.execute_specs_in_node }
     end
 
     it "should build the distribution"
